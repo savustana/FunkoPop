@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-3lbq@)0fnoss0^2^6*u0(o8%x=9yf+*7o2b31kql#kxmr^pu+4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['funkopop-j6et.onrender.com']
+ALLOWED_HOSTS = ['funkopop-j6et.onrender.com'] #  'funkopop-j6et.onrender.com'
 
 
 # Application definition
@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app'
+    'app',
+    'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -120,6 +122,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'Project/static']
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "app/media"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 

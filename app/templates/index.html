@@ -1,11 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 
-</head>
-<body>
-<h1>Hello</h1>
-</body>
-</html>
+<main>
+    <section>
+    {% for item in funko_list %}
+        <div class="card" style="width: 18rem;">
+            <div class="img-div">
+          <img src="static{{ MEDIA_URL }}{{ item.image }}" class="card-img-top" alt="FunkoImage">
+                </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ item.collection }}</h5>
+            <h3 class="card-title">{{ item.title }}</h3>
+            <h4 class="card-title">${{ item.price }}</h4>
+
+              <form method="POST">
+               {% csrf_token %}
+              <button class="btn-primary" type="submit" name="add_to_cart" value="{{ item.id }}">ADD TO CART</button>
+              </form>
+              <a href="{% url 'item_page' item.pk %}"><button type="button">Discover</button></a>
+          </div>
+        </div>
+    {% endfor %}
+        </section>
+    </main>
+
+{% endblock %}
+
+
+
+
+

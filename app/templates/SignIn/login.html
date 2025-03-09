@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container-py-5">
+        <h1>Login</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ login_form }}
+            <button type="submit" class="btn btn-primary" id="loginUser">Login</button>
+        </form>
+    <p class="text-center" style="text-align: center">Don't have an account? <a href="/register">Register</a> </p>
+    </div>
+{% endblock %}

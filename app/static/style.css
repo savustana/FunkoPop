@@ -1,0 +1,207 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: Impact, sans-serif;
+}
+
+body {
+    background-color: #ffffff;
+    position: relative;
+    font-family: Impact, sans-serif;
+    font-size: 20px;
+    line-height: 1.5;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.navbar {
+    background-color: #4a2345;
+    padding: 30px;
+
+}
+
+.nav-title {
+    font-size: 30px;
+}
+
+
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+
+}
+
+nav li {
+    color: #fff;
+    margin-right: 1%;
+    margin-left: 1%;
+
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    }
+
+
+main {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+section {
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.card {
+    float: right;
+    min-width: 250px;
+    width: 40%;
+    height: auto;
+    flex-wrap: wrap;
+    display: block;
+    position: relative;
+    background-color: #fff;
+    padding: 2%;
+    margin: 20px;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+
+
+}
+
+.img-div {
+    min-height: 200px;
+    align-content: center;
+    overflow: hidden;
+    text-align: center;
+}
+
+.card-img-top {
+    max-width: 200px;
+    margin-left: auto;
+
+}
+
+.container-py-5 form {
+    max-width: 60%;
+    margin: 0 auto 10% auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    float: left;
+}
+
+
+
+
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown > input[type="checkbox"] {
+  position: absolute;
+  left: -100vw;
+}
+
+.dropdown > label,
+.dropdown > a[role="button"] {
+  display: inline-block;
+  padding: 6px 15px;
+  color: #ffffff;
+  line-height: 1.5em;
+  text-decoration: none;
+  border: 1px solid #8c8c8c;
+  cursor: pointer;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+
+
+.dropdown > label:hover,
+.dropdown > a[role="button"]:hover,
+.dropdown > a[role="button"]:focus {
+  border-color: #ffffff;
+}
+
+.dropdown > label:after,
+.dropdown > a[role="button"]:after {
+  content: "\f0d7";
+  display: inline-block;
+  margin-left: 6px;
+}
+
+.dropdown > ul {
+  position: absolute;
+  z-index: 999;
+  display: block;
+  left: -100vw;
+  top: calc(1.5em + 14px);
+  border: 1px solid #ffffff;
+  background: #fff;
+  padding: 6px 0;
+  margin: 0;
+  list-style: none;
+  width: 100%;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 3px 8px rgba(0,0,0,.15);
+  -moz-box-shadow: 0 3px 8px rgba(0,0,0,.15);
+  box-shadow: 0 3px 8px rgba(0,0,0,.15);
+}
+
+.dropdown > ul a {
+  display: block;
+  padding: 6px 15px;
+  text-decoration: none;
+  color: #000000;
+}
+
+.dropdown > ul a:hover,
+.dropdown > ul a:focus {
+  background: #ececec;
+}
+
+.dropdown > input[type="checkbox"]:checked ~ ul,
+.dropdown > ul:target {
+  left: 0;
+}
+
+.dropdown > [type="checkbox"]:checked + label:after,
+.dropdown > ul:target ~ a:after {
+  content: "\f0d8";
+}
+
+.dropdown a.close {
+  display: none;
+}
+
+.dropdown > ul:target ~ a.close {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  text-indent: -100vw;
+  z-index: 1000;
+}
+
+
+
+
+

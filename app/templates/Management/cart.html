@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<main>
+    <section>
+<h1>Your Cart</h1>
+        {% for item in cart %}
+        <div class="card" style="width: 18rem;">
+  <img src="/static/media/{{ item.item.image }}" class="card-img-top" alt="FunkoImage">
+  <div class="card-body">
+    <h3 class="card-title">{{ item.item.title }}</h3>
+    <h4 class="card-title">${{ item.item.price }}</h4>
+    <h5 class="card-title">Quantity: {{ item.quantity }}</h5>
+    <form method="POST">
+        {% csrf_token %}
+        <button class="btn-primary" type="submit" name="add_to_cart" value="{{ item.id }}">ADD TO CART</button>
+    </form>
+
+      <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn-primary" name="delete_item" value="{{ item.id }}">DELETE</button>
+     </form>
+  </div>
+</div>
+
+    {% endfor %}
+</section>
+    </main>
+{% endblock %}
