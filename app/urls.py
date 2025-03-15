@@ -21,14 +21,32 @@ from . import views, admin
 urlpatterns = [
 
     path('', views.index, name='index'),
+
+    #region SignInViews
+
     path('login/', views.login_page, name='login'),
     path('logout/', views.logout_page, name='logout'),
     path('register/', views.register, name='register'),
+
+    #endregion
+
+    #region AdminViews
+
     path('add_new_item/', views.add_new_item, name='add_new_item'),
     path('add_category/', views.add_new_category, name='add_new_category'),
+    path('add_sereis/', views.add_new_series, name='add_new_series'),
+    path('delete_items/', views.delete_management, name='delete_items'),
+
+    #endregion
+
+    #region UserViews
+
     path('cart/', views.view_cart, name='view_cart'),
     path('stats/', views.stats, name='stats'),
     path('delete/', views.delete_cart_items, name='delete_cart_items'),
     path('item_page/<int:item_id>', views.item_page, name='item_page'),
     path('data/', views.serialize_data, name='serialize_data'),
+
+    #endregion
+
 ]

@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import FunkoPop, User
+from .models import Stuff, User
 
 class FunkoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = FunkoPop
+        model = Stuff
         fields = ('collection', 'title', 'price', 'description', 'image', 'rate')
 
 
