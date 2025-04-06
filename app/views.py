@@ -2,10 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-from .form import NewUserForm, StuffForm, CategoryForm, SeriesForm
+from .form import NewUserForm, StuffForm, CategoryForm, SeriesForm, ProfileUserForm
 from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse
-from .models import Stuff, User, Category, Order, ProfileUser, Series
+from .models import Stuff, User, Category, Order, ProfileUser, Series, StuffOrder
 from django.conf import settings
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
@@ -13,57 +13,171 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 
 from .serializers import FunkoSerializer, UserSerializer
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
-from rest_framework.response import Response
-
+context = dict()
 
 
 def admin_check(user):
     return user.is_staff
 
 
-
 def index(request):
-    funko_list = Stuff.objects.all()
-    context = {
-        'funko_list': funko_list,
-        'MEDIA_URL': settings.MEDIA_URL,
-    }
+    base_context(request)
+    stuff_list = Stuff.objects.all()
+    context.update({'stuff_list': stuff_list})
 
     if request.method == "POST" and request.user:
         item_id = request.POST['add_to_cart']
-        person_id = request.user
-        items = Stuff.objects.get(id=item_id)
-        cart, created = Order.objects.get_or_create(item=items, user=person_id)
-        if not created:
-            cart.quantity += 1
-        cart.save()
+        item = Stuff.objects.filter(pk=item_id).first()
+        stuff_order, created = StuffOrder.objects.get_or_create(item=item, defaults={'quantity': 1})
 
-        return redirect(index)
-    return render(request, 'index.html', context)
+        order, order_created = Order.objects.get_or_create(user=request.user)
+        current_stuff = StuffOrder.objects.filter(id=stuff_order.id).first()
+        order.items.add(current_stuff)
+
+        if not stuff_order:
+            return HttpResponse("StuffOrder not found", status=404)
+
+        if not order:
+            return HttpResponse("Order not found", status=404)
+
+        if not created:
+            stuff_order.quantity += 1
+
+        stuff_order.save()
+        order.total_price += item.price
+        order.save()
+
+        return redirect(view_cart)
+
+    return render(request, 'index.html', context=context)
+
+
+def pop_page(request):
+    base_context(request)
+    stuff_list = Stuff.objects.filter(category=1).all()
+    context.update({'stuff_list': stuff_list})
+    pop = Category.objects.filter(id=1).first()
+    context.update({'pop': pop})
+
+    if request.method == "POST" and request.user:
+        item_id = request.POST['add_to_cart']
+        item = Stuff.objects.filter(pk=item_id).first()
+        # stuff_order = StuffOrder.objects.filter(item=item).first()
+        stuff_order = StuffOrder.objects.get_or_create(item=item)
+
+        if not stuff_order:
+            stuff_order = StuffOrder.objects.create(item=item)
+
+        price = item.price
+        order = Order.objects.filter(user=request.user).first()
+        order.total_price += price
+        stuff_order.quantity += 1
+        order.items.add(stuff_order)
+        order.save()
+        stuff_order.save()
+
+        return redirect(view_cart)
+
+    return render(request, 'Categories/pop_category.html', context=context)
+
+
+def accessories_page(request):
+    base_context(request)
+    stuff_list = Stuff.objects.filter(category=2).all()
+    context.update({'stuff_list': stuff_list})
+    pop = Category.objects.filter(id=2).first()
+    context.update({'pop': pop})
+
+    if request.method == "POST" and request.user:
+        item_id = request.POST['add_to_cart']
+        item = Stuff.objects.filter(pk=item_id).first()
+        stuff_order = StuffOrder.objects.filter(item=item).first()
+
+        if stuff_order is None:
+            stuff_order = StuffOrder.objects.create(item=item)
+
+        price = item.price
+        order = Order.objects.filter(user=request.user).first()
+        order.total_price += price
+        stuff_order.quantity += 1
+        order.items.add(stuff_order)
+        order.save()
+        stuff_order.save()
+
+        return redirect(view_cart)
+
+    return render(request, 'Categories/accessories.html', context=context)
+
+
+def clothing_page(request):
+    base_context(request)
+    stuff_list = Stuff.objects.filter(category=3).all()
+    context.update({'stuff_list': stuff_list})
+    pop = Category.objects.filter(id=3).first()
+    context.update({'pop': pop})
+
+    if request.method == "POST" and request.user:
+        item_id = request.POST['add_to_cart']
+        item = Stuff.objects.filter(pk=item_id).first()
+        stuff_order = StuffOrder.objects.filter(item=item).first()
+
+        if not stuff_order:
+            stuff_order = StuffOrder.objects.create(item=item)
+
+        price = item.price
+        order = Order.objects.filter(user=request.user).first()
+        order.total_price += price
+        stuff_order.quantity += 1
+        order.items.add(stuff_order)
+        order.save()
+        stuff_order.save()
+
+        return redirect(view_cart)
+
+    return render(request, 'Categories/clothing.html', context=context)
+
+
+def base_context(request):
+    context.clear()
+    category = Category.objects.all()
+    if request.user.is_authenticated:
+        profile = ProfileUser.objects.filter(user=request.user).first()
+        context.update({'profile': profile})
+
+    MEDIA_URL = settings.MEDIA_URL
+    context.update({'categories': category})
+    context.update({'MEDIA_URL': MEDIA_URL})
 
 
 def item_page(request, item_id):
     item = Stuff.objects.get(id=item_id)
+    base_context(request)
+    context.update({'item': item})
 
-
-    return render(request, 'Management/item_page.html', {'item': item})
+    return render(request, 'Management/item_page.html', context)
 
 
 def register(request):
+    base_context(request)
     if request.method == 'POST':
         form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
+            # profile = ProfileUser.objects.create(user=user)
+            # profile.save()
             messages.success(request, 'Your account has been created!')
-            return redirect('index.html')
+            return redirect('index')
         messages.error(request, 'Please correct the error below.')
     form = NewUserForm()
-    return render(request, 'SignIn/register.html', {'register_form': form})
+    context.update({'register_form': form})
+    return render(request, 'SignIn/register.html', context)
 
 
 def login_page(request):
+    base_context(request)
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
 
@@ -88,9 +202,8 @@ def login_page(request):
             messages.error(request, 'Please correct the error below.')
 
     form = AuthenticationForm()
-
-    return render(request, 'SignIn/login.html', {'login_form': form})
-
+    context.update({'login_form': form})
+    return render(request, 'SignIn/login.html', context)
 
 
 def logout_page(request):
@@ -111,7 +224,10 @@ def add_new_item(request):
             return render(request, 'AdminAccess/new_item.html', context)
     else:
         stuff = StuffForm()
-        context = {'form': stuff}
+        profile = ProfileUser.objects.filter(user=request.user).first()
+        MEDIA_URL = settings.MEDIA_URL
+        context = {'form': stuff, 'profile': profile, 'MEDIA_URL': MEDIA_URL}
+
         return render(request, 'AdminAccess/new_item.html', context)
 
 
@@ -127,7 +243,9 @@ def add_new_category(request):
             return render(request, 'AdminAccess/add_category.html', context)
     else:
         category = CategoryForm()
-        context = {'form': category}
+        profile = ProfileUser.objects.filter(user=request.user).first()
+        MEDIA_URL = settings.MEDIA_URL
+        context = {'form': category, 'profile': profile, 'MEDIA_URL': MEDIA_URL}
         return render(request, 'AdminAccess/add_category.html', context)
 
 
@@ -143,64 +261,63 @@ def add_new_series(request):
             return render(request, 'AdminAccess/add_series.html', context)
     else:
         series = SeriesForm()
-        context = {'form': series}
+        profile = ProfileUser.objects.filter(user=request.user).first()
+        MEDIA_URL = settings.MEDIA_URL
+        context = {'form': series, 'profile': profile, 'MEDIA_URL': MEDIA_URL}
         return render(request, 'AdminAccess/add_series.html', context)
 
 
-
-
-@receiver(post_delete, sender=Stuff)
-def delete_cart_items(sender, instance, **kwargs):
-    Order.objects.filter(item=instance).delete()
-
-
-@login_required
-def add_to_cart(request):
-    if request.method == "POST":
-        item_id = request.POST['add_to_cart']
-        person_id = request.user.id
-
-        cart, created = Order.objects.get_or_create(stuff_id=item_id, person_id=person_id)
-        if not created:
-            cart.quantity += 1
-        cart.save()
-
-    return redirect('index')
-
 @login_required
 def view_cart(request):
-    cart = Order.objects.filter(user_id=request.user.id)
+    cart = Order.objects.filter(user=request.user).first()
+    items = cart.items.all()
+    base_context(request)
+    context.update({'items_cart': items, 'cart': cart})
+    if request.method == "POST" :
+        if "delete_from_cart" in request.POST:
+            item_id = request.POST['delete_from_cart']
+            item = Stuff.objects.filter(pk=item_id).first()
 
-    media_url = settings.MEDIA_URL
+            stuff_order = StuffOrder.objects.filter(item=item_id).first()
+            cart.items.remove(stuff_order)
 
-    if request.method == "POST" and 'delete_item' in request.POST:
-        item_id = request.POST['delete_item']
-
-        cart_item = Order.objects.get(id=item_id)
-        if cart_item.quantity > 1:
-            cart_item.quantity -= 1
-            cart_item.save()
-        else:
-            cart_item.delete()
-
-    return render(request, 'Management/cart.html',
-                  {'cart': cart, 'MEDIA_URL': media_url})
+            order = StuffOrder.objects.filter(item=item_id).delete()
+            cart.total_price -= stuff_order.quantity * item.price
+            stuff_order.quantity = 0
+            stuff_order.save()
+            cart.save()
 
 
-@receiver(post_delete, sender=Stuff)
-def delete_cart_items(sender, instance, **kwargs):
-    cart_item = Order.objects.get(id=instance.cart_item.item_id)
-    if cart_item.quantity > 1:
-        cart_item.quantity -= 1
-        cart_item.save()
-    else:
-        cart_item.delete()
+        elif 'add_to_cart' in request.POST:
+            item_id = request.POST['add_to_cart']
+            item = Stuff.objects.filter(pk=item_id).first()
+
+            stuff_order = StuffOrder.objects.filter(item=item_id).first()
+
+            stuff_order.quantity += 1
+            cart.total_price += item.price
+            cart.save()
+            stuff_order.save()
+
+        elif "minus_from_cart" in request.POST:
+            item_id = request.POST['minus_from_cart']
+            item = Stuff.objects.filter(pk=item_id).first()
+
+            stuff_order = StuffOrder.objects.filter(item=item_id).first()
+
+            stuff_order.quantity -= 1
+            cart.total_price -= item.price
+            stuff_order.save()
+            cart.save()
+
+    return render(request, 'Management/cart.html', context)
 
 
 @login_required
 def edit_user_profile(request):
+    base_context(request)
     user_p = ProfileUser.objects.filter(user_id=request.user.id)
-    context = {'info': user_p}
+    context.update({'info': user_p})
     return render(request, 'UserInfo/user_profile.html', context)
 
 
@@ -234,27 +351,75 @@ def serialize_data(request):
 
         return JsonResponse(data, safe=False)
 
+
 @user_passes_test(admin_check, login_url="/login/")
 def delete_management(request):
+    base_context(request)
     stuff = Stuff.objects.all()
     category = Category.objects.all()
     series = Series.objects.all()
-    context = {
+    context.update({
         'stuff': stuff,
         'category': category,
         'series': series,
-    }
-    if request.method == "POST" and "delete_stuff" in request.POST:
-        item_id = request.POST.get["delete_stuff"]
+    })
+
+    if request.method == "POST" and 'delete_stuff' in request.POST:
+        item_id = request.POST.get('delete_stuff')
         Stuff.objects.filter(id=item_id).delete()
 
     if request.method == "POST" and 'delete_category' in request.POST:
-        item_id = request.POST.get['delete_category']
+        item_id = request.POST.get('delete_category')
         Category.objects.filter(id=item_id).delete()
 
     if request.method == "POST" and 'delete_series' in request.POST:
-        item_id = request.POST.get['delete_series']
+        item_id = request.POST.get('delete_series')
         Series.objects.filter(id=item_id).delete()
 
 
     return render(request, 'AdminAccess/delete_items.html', context)
+
+
+@user_passes_test(admin_check, login_url="/login/")
+def users_management(request):
+    base_context(request)
+    users = ProfileUser.objects.all()
+
+    paginator = Paginator(users, 10)
+    page_number = request.GET.get('page', 1)
+    page_object = paginator.page(page_number)
+
+    context.update({'page_object': page_object})
+
+
+    return render(request, 'AdminAccess/users_management.html', context)
+
+
+@login_required
+def user_profile(request, user_id):
+    profile = ProfileUser.objects.filter(user_id=user_id).first()
+    base_context(request)
+    context.update({'profile': profile, 'MEDIA_URL': settings.MEDIA_URL})
+
+    if request.method == 'POST' and 'profile_submit' in request.POST:
+        profile_id = request.POST.get('profile_submit')
+        profile = ProfileUser.objects.filter(id=profile_id).first()
+        image = request.FILES.get('profile_avatar')
+        bio = request.POST.get('profile_bio')
+        if image:
+            profile.avatar = image
+        if bio:
+            profile.bio = bio
+        profile.save()
+        return redirect('view_profile', user_id=profile.user_id)
+
+    return render(request, 'UserInfo/user_profile.html', context)
+
+
+@login_required
+def view_profile(request, user_id):
+    profile = ProfileUser.objects.filter(user_id=user_id).first()
+    base_context(request)
+    context.update({'profile': profile, 'MEDIA_URL': settings.MEDIA_URL})
+    return render(request, 'UserInfo/view_profile.html', context)
+

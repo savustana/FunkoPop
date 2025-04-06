@@ -14,8 +14,24 @@ body {
     min-height: 100vh;
 }
 
+
+
+.main-title {
+    width: 100%;
+    padding: 5vh;
+}
+
+.cart-items {
+     margin-left: 3vh;
+}
+
+.main-title .total {
+    margin-left: 7vh;
+}
+
+
 .navbar {
-    background-color: #4a2345;
+    background-color: #1e1e1e;
     padding: 30px;
 
 }
@@ -46,7 +62,7 @@ nav a {
 
 
 main {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: auto;
     display: flex;
     flex-wrap: wrap;
@@ -70,13 +86,28 @@ section {
     display: block;
     position: relative;
     background-color: #fff;
-    padding: 2%;
-    margin: 20px;
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+    padding: 1%;
+    margin: 8vh 4vh;
+    box-shadow: 0 0 10px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 
-
 }
+
+.card-cart {
+    float: left;
+    min-width: 300px;
+    width: 40%;
+    height: auto;
+    flex-wrap: wrap;
+    display: block;
+    position: relative;
+    background-color: #fff;
+    padding: 1%;
+    margin: 8vh 4vh;
+    box-shadow: 0 0 10px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
 
 .img-div {
     min-height: 200px;
@@ -88,7 +119,81 @@ section {
 .card-img-top {
     max-width: 200px;
     margin-left: auto;
+}
 
+.card-body {
+    padding: 10px;
+
+}
+
+.card button, .form-div button, .item-card-body button, .card-cart button, .profile button {
+    background-color: #dcdcdc;
+    color: #000000;
+    font-size: 16px;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin: 5px;
+}
+
+
+.button-link-cart:link:hover, .button-link-cart:hover {
+    text-decoration: none;
+}
+
+.button-link-cart {
+    bottom: 0;
+}
+
+.btn-search {
+    background-color: #dcdcdc;
+    color: #000000;
+    font-size: 10px;
+    border: none;
+    border-radius: 50%;
+    padding: 10px 12px;
+    margin: 5px;
+}
+
+.search-bar {
+    background-color: #dcdcdc;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 10px;
+}
+
+.card form, .form-button {
+    text-align: center;
+}
+
+
+
+
+.cart-button a {
+    text-decoration: none;
+    color: black;
+}
+
+.cart-button:hover {
+    font-size: 37px;
+    background-color: #c7cbff;
+}
+
+.form-button {
+    margin-top: 10px;
+}
+
+.card a, .delete-item-div a, .user-manage-div a, .card-body a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.card a:hover, .delete-item-div a:hover, .user-manage-div a:hover, .card-body a:hover {
+    text-decoration: underline;
+}
+
+.card-body h5 {
+    opacity: 70%;
 }
 
 .container-py-5 form {
@@ -104,104 +209,284 @@ section {
 
 
 
+.dropdown-button {
+  color: white;
+  padding: 16px;
+  font-size: 20px;
+  border: none;
+}
 
-
+/* The container <div> - needed to position the dropdown content */
 .dropdown {
   position: relative;
   display: inline-block;
 }
 
-.dropdown > input[type="checkbox"] {
-  position: absolute;
-  left: -100vw;
-}
-
-.dropdown > label,
-.dropdown > a[role="button"] {
-  display: inline-block;
-  padding: 6px 15px;
-  color: #ffffff;
-  line-height: 1.5em;
-  text-decoration: none;
-  border: 1px solid #8c8c8c;
-  cursor: pointer;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-}
-
-
-
-.dropdown > label:hover,
-.dropdown > a[role="button"]:hover,
-.dropdown > a[role="button"]:focus {
-  border-color: #ffffff;
-}
-
-.dropdown > label:after,
-.dropdown > a[role="button"]:after {
-  content: "\f0d7";
-  display: inline-block;
-  margin-left: 6px;
-}
-
-.dropdown > ul {
-  position: absolute;
-  z-index: 999;
-  display: block;
-  left: -100vw;
-  top: calc(1.5em + 14px);
-  border: 1px solid #ffffff;
-  background: #fff;
-  padding: 6px 0;
-  margin: 0;
-  list-style: none;
-  width: 100%;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-box-shadow: 0 3px 8px rgba(0,0,0,.15);
-  -moz-box-shadow: 0 3px 8px rgba(0,0,0,.15);
-  box-shadow: 0 3px 8px rgba(0,0,0,.15);
-}
-
-.dropdown > ul a {
-  display: block;
-  padding: 6px 15px;
-  text-decoration: none;
-  color: #000000;
-}
-
-.dropdown > ul a:hover,
-.dropdown > ul a:focus {
-  background: #ececec;
-}
-
-.dropdown > input[type="checkbox"]:checked ~ ul,
-.dropdown > ul:target {
-  left: 0;
-}
-
-.dropdown > [type="checkbox"]:checked + label:after,
-.dropdown > ul:target ~ a:after {
-  content: "\f0d8";
-}
-
-.dropdown a.close {
+/* Dropdown Content (Hidden by Default) */
+.dropdown-menu {
   display: none;
-}
-
-.dropdown > ul:target ~ a.close {
-  display: block;
   position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  text-indent: -100vw;
-  z-index: 1000;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-menu a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-menu a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-menu {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropdown-button {background-color: #555555;}
+
+
+
+.user-info {
+    width: 100%;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.user-info ul {
+    float: right;
+}
+
+.user-info li {
+    padding: 10px;
+}
+
+.form-div {
+    width: 100%;
+    padding: 40px;
+}
+
+.center-form {
+    width: 20%;
+    margin: auto;
+}
+
+.center-form p, button {
+    padding: 5px;
+}
+
+.center-form h1 {
+    padding-bottom: 15px;
+}
+
+.main-title h1 {
+    font-size: 40px;
+    text-align: center;
+}
+
+
+.form-div input, select, textarea {
+    width: 80%;
+    height: 25px;
+    margin: 2px;
+    float: right;
+}
+
+.image-profile {
+    clip-path: circle();
+    color: white;
+    width: 4vh;
+}
+
+form.search {
+    width: 20vh;
+}
+
+.button-grid form {
+    text-align: center;
+    margin-top: 3vh;
+}
+
+
+div.scrollmenu {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+
+    .card {
+        flex: 0 0 auto;
+  }
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+
+.item-img {
+    width: 35vw;
+    float: left;
+    background-color: #e8e8e8;
+    margin: 5vh 5vh 5vh 10vh;
+}
+
+.item-card-body {
+    float: right;
+    margin: 5vh 5vh 5vh;
+    font-size: 35px;
+}
+
+.item-price {
+    font-size: 25px;
+    opacity: 80%;
+    margin-top: 1vh;
+}
+
+.item-page {
+    display : flex;
+    flex-direction : row;
+}
+
+.item-card-body form {
+    text-align: center;
+}
+
+.item-card-body button {
+    width: 100%;
+    height: 10%;
+    border-radius: 60px;
+    margin-top: 4vh;
+}
+
+.item-card-body button:hover, .card-body button:hover, .profile button:hover, .center-form button:hover {
+    background-color: #8f8f8f;
+}
+
+.item-card-body h6 {
+    font-size: 15px;
+    opacity: 70%;
+    margin-top: 1vh;
+}
+
+.item-collection {
+    font-size: 20px;
+    opacity: 90%;
+}
+
+.item-card-body p {
+    font-size: 20px;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    margin-top: 3vh;
+}
+
+.delete-item-div {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    text-align: center;
+    margin: 0 30px 0 0;
+}
+
+.delete-item-div li {
+    list-style: none;
+    border: solid 1px #6a6a6a;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+.delete-item-div li h2 {
+    text-align: left;
+    padding: 10px 0 5px 20px;
+}
+
+.delete-item-div li form {
+    text-align: right;
+    padding: 5px 20px 5px 0;
+}
+
+.user-manage-div {
+    text-align: center;
+    padding: 40px;
+}
+
+.user-manage-div h1, .form-div h1, .main-title h1 {
+    margin-bottom: 4vh;
+    color: #12217a;
+}
+
+.user-manage-div li {
+    list-style: none;
 }
 
 
 
+.paginator {
+    float: right;
+    padding: 4vh;
+    opacity: 80%;
+}
 
+.cart-button {
+    background-color: #dcdcdc;
+    font-size: 35px;
+    border-radius: 50%;
+    padding: 1vh;
+    border: solid 5px #12217a;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 6vh 3vh;
+}
+
+.cart-button i {
+    padding: 7px;
+}
+
+.container-py-5 h1 {
+    padding: 4vh 4vh 0 4vh;
+    color: #12217a;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 1vh;
+    text-align: center;
+    background-color: #1e1e1e;
+    color: white;
+    font-size: 17px;
+}
+
+.username-profile {
+    text-align: center;
+    margin-bottom: 4vh;
+}
+
+.avatar {
+    clip-path: circle();
+    width: 40vh;
+    border-radius: 50%;
+}
+
+.profile {
+    text-align: center;
+}
+
+.profile a {
+    font-size: 13px;
+    text-decoration: none;
+    color: black;
+}
+
+.profile p {
+    margin: 3vh;
+}
+
+.category-image {
+    margin-left: 17vh;
+}
 

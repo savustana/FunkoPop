@@ -3,14 +3,18 @@
 
 {% block content %}
 
-    <div class="container-py-5">
+    <div class="form-div">
+        <div class="center-form">
         <h1>Register</h1>
         <form method="POST">
             {% csrf_token %}
             {{ register_form }}
-            <button class="btn btn-primary" type="submit">Register</button>
+            <div class="form-button">
+                <button type="submit">Register</button>
+            </div>
         </form>
     <p class="text-center">If you already have an account <a href="/login">Login</a></p>
+     </div>
     </div>
 
 {% endblock %}

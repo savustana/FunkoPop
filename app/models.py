@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
@@ -25,8 +27,8 @@ class Filter(models.Manager):
         return self.all().filter(price__gte=min_price, price__lte=max_price)
 
     def filter_search(self, search):
-        if self.filter(description__icontains=search):
-            return self.filter(description__icontains=search)
+        if self.filter(description__icontains=search) or self.filter(name__icontains=search) or self.filter(collection__contains=search):
+            return self.all().filter(name__icontains=search)
         return self.all()
 
 
@@ -35,7 +37,7 @@ class Category(models.Model):
     id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=50)
     description = models.TextField(max_length=500)
-    image = models.ImageField(upload_to='images/')
+    image = models.ImageField(upload_to='images/categories')
 
 
 class Series(models.Model):
@@ -55,14 +57,7 @@ class Stuff(models.Model):
     price = models.FloatField(null=True, blank=True)
     description = models.TextField()
     stock = models.IntegerField(null=True, blank=True)
-    image = models.ImageField(upload_to='images/')
-
-
-# class Cart(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     item = models.ForeignKey(FunkoPop, on_delete=models.CASCADE)
-#     quantity = models.PositiveIntegerField(default=1)
-#     total_price = models.PositiveIntegerField(default=0)
+    image = models.ImageField(upload_to='images/stuff/')
 
 
 class Wishlist(models.Model):
@@ -82,9 +77,9 @@ class CollectionUser(models.Model):
 
 class ProfileUser(models.Model):
     id = models.IntegerField(primary_key=True)
-    avatar = models.ImageField(upload_to='images/', null=True, blank=True)
+    avatar = models.ImageField(upload_to='images/avatars/', null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     collection = models.ForeignKey(CollectionUser, on_delete=models.CASCADE, null=True)
     wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE, null=True)
 
@@ -101,6 +96,12 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+class StuffOrder(models.Model):
+    id = models.IntegerField(primary_key=True)
+    item = models.ForeignKey(Stuff, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+
+
 class Order(models.Model):
     Statuses = {
         "W": "Waiting",
@@ -108,9 +109,12 @@ class Order(models.Model):
         "S": "Sent",
         "R": "Received",
     }
-    id = models.IntegerField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     status = models.CharField(max_length=10, choices=Statuses)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    items = models.ManyToManyField(Stuff)
+    items = models.ManyToManyField(StuffOrder)
     total_price = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+

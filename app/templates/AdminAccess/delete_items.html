@@ -2,20 +2,50 @@
 {% load static %}
 {% block content %}
 
-
-  <div class="container-py-5">
+<div class="delete-item-div">
+  <div class="form-div">
     <h1>Stuff</h1>
     <ul>
       {% for item in stuff %}
       <li>
-         <h2> {{ item.name }} </h2>
+         <h2><a href="{% url 'item_page' item.pk %}"> {{ item.title }} </a></h2>
         <form method="POST">
          {% csrf_token %}
-          <button type="submit" name="delete_stuff" value="{{ item.id }}">Delete {{ item.id }}</button>
+          <button type="submit" name="delete_stuff" value="{{ item.id }}">Delete (id: {{ item.id }})</button>
         </form>
       </li>
       {% endfor %}
     </ul>
   </div>
 
+  <div class="form-div">
+    <h1>Category</h1>
+    <ul>
+      {% for item in category %}
+      <li>
+         <h2> {{ item.title }} </h2>
+        <form method="POST">
+         {% csrf_token %}
+          <button type="submit" name="delete_category" value="{{ item.id }}">Delete (id: {{ item.id }})</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="form-div">
+    <h1>Series</h1>
+    <ul>
+      {% for item in series %}
+      <li>
+         <h2> {{ item.name }} </h2>
+        <form method="POST">
+         {% csrf_token %}
+          <button type="submit" name="delete_series" value="{{ item.id }}">Delete (id: {{ item.id }})</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
 {% endblock %}

@@ -43,8 +43,14 @@ urlpatterns = [
 
     path('cart/', views.view_cart, name='view_cart'),
     path('stats/', views.stats, name='stats'),
-    path('delete/', views.delete_cart_items, name='delete_cart_items'),
+    # path('delete/', views.delete_cart_items, name='delete_cart_items'),
     path('item_page/<int:item_id>', views.item_page, name='item_page'),
+    path('pop_category_page', views.pop_page, name='pop_category_page'),
+    path('accessories_page', views.accessories_page, name='accessories_page'),
+    path('clothing_page', views.clothing_page, name='clothing_page'),
+    path('user_management/', views.users_management, name='users_management'),
+    path('user_profile/<int:user_id>', views.user_profile, name='user_profile'),
+    path('view_profile/<int:user_id>', views.view_profile, name='view_profile'),
     path('data/', views.serialize_data, name='serialize_data'),
 
     #endregion

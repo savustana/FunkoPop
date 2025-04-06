@@ -4,7 +4,7 @@ from .models import Stuff, User
 class FunkoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stuff
-        fields = ('collection', 'title', 'price', 'description', 'image', 'rate')
+        fields = ('collection', 'title', 'price', 'description', 'image', 'category', 'stock', 'series')
 
 
 class UserSerializer(serializers.ModelSerializer):

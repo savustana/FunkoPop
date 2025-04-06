@@ -2,25 +2,15 @@
 {% load static %}
 {% block content %}
 
-
-
-{% if user.is_authenticated %}
-    <div class="button-cart-holder">
-    <button class="cart-button"><a href="{% url 'view_cart' %}">
-            <i class="fa-solid fa-cart-shopping"></i></a>
-        </button>
-    </div>
-{% else %}
-<div class="button-cart-holder">
-    <button class="cart-button"><a href="{% url 'login' %}">
-            <i class="fa-solid fa-cart-shopping"></i></a>
-        </button>
-    </div>
-{% endif %}
-
+<div class="container-py-5">
+   <h1>POP!</h1>
+    <img src="static{{ MEDIA_URL }}{{ pop.image }}" class="category-image">
+</div>
 <main>
     <section>
-        <div class="scrollmenu">
+
+
+<div class="scrollmenu">
     {% for item in stuff_list %}
 
 
@@ -46,13 +36,8 @@
         </div>
 
     {% endfor %}
-             </div>
-        </section>
-    </main>
 
+</div>
+    </section>
+</main>
 {% endblock %}
-
-
-
-
-

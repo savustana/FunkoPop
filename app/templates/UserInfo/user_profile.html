@@ -1,8 +1,22 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-   {% if user_p.avatar %}
 
+<div class="container-py-5">
+   <h1 class="username-profile">{{ profile.user.username }}</h1>
+   <p></p>
+</div>
+
+<div class="form-div">
+        <div class="center-form">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="profile_avatar">
+                <input type="text" name="profile_bio">
+                <button type="submit" name="profile_submit" value="{{ profile.id }}">Save</button>
+            </form>
+            </div>
+    </div>
 
 
 {% endblock %}

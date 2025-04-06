@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container-py-5">
+   <h1 class="username-profile">{{ profile.user.username }}</h1>
+</div>
+
+<div class="profile">
+    <img src="/static{{ MEDIA_URL }}{{ profile.avatar }}" class="avatar"><br>
+    <button><a href="{% url 'user_profile' user.id %}">UPDATE PROFILE</a></button>
+
+    <p>{{ profile.bio }}</p>
+</div>
+
+
+{% endblock %}

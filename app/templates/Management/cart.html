@@ -1,29 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
-<main>
-    <section>
-<h1>Your Cart</h1>
-        {% for item in cart %}
-        <div class="card" style="width: 18rem;">
-  <img src="/static/media/{{ item.item.image }}" class="card-img-top" alt="FunkoImage">
-  <div class="card-body">
-    <h3 class="card-title">{{ item.item.title }}</h3>
-    <h4 class="card-title">${{ item.item.price }}</h4>
-    <h5 class="card-title">Quantity: {{ item.quantity }}</h5>
-    <form method="POST">
-        {% csrf_token %}
-        <button class="btn-primary" type="submit" name="add_to_cart" value="{{ item.id }}">ADD TO CART</button>
-    </form>
 
-      <form method="POST">
-        {% csrf_token %}
-        <button type="submit" class="btn-primary" name="delete_item" value="{{ item.id }}">DELETE</button>
-     </form>
-  </div>
-</div>
+        <div class="main-title">
+        <h1>Your Cart</h1>
+            <h3 class="total">Order Total:  ${{ cart.total_price }}</h3>
+            <div class="cart-items">
+            {% for stuff in items_cart  %}
+                <div class="card-cart" style="width: 18rem;">
+                    <div class="img-div">
+                        <img src="/static{{ MEDIA_URL }}{{ stuff.item.image }}" class="card-img-top" alt="FunkoImage">
+                </div>
 
-    {% endfor %}
-</section>
-    </main>
+                    <div class="card-body">
+                        <a href="{% url 'item_page' stuff.item.pk %}"><h3 class="card-title">{{ stuff.item.title|truncatechars:20 }}</h3></a>
+                        <h4 class="card-title">${{ stuff.item.price }}</h4>
+                        <h5 class="card-title">Quantity: {{ stuff.quantity }}</h5>
+                        <div class="button-grid">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-primary" name="minus_from_cart" value="{{ stuff.item.id }}">-</button>
+                            <button type="submit" class="btn-primary" name="delete_from_cart" value="{{ stuff.item.id }}">DELETE</button>
+                            <button class="btn-primary" type="submit" name="add_to_cart" value="{{ stuff.item.id }}">+</button>
+                        </form>
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+                </div>
+        </div>
 {% endblock %}

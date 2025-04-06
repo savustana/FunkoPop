@@ -1,14 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
-
-<div class="card" style="width: 18rem;">
-  <img src="/static/media/{{ item.image }}" class="card-img-top" alt="FunkoImage">
-  <div class="card-body">
-    <h3 class="card-title">{{ item.title }}</h3>
-    <h4 class="card-title">${{ item.price }}</h4>
-  </div>
+<div class="button-cart-holder">
+<button class="cart-button">
+        <i class="fa-solid fa-cart-shopping"></i>
+    </button>
+</div>
+<div>
+      <div class="item-page" >
+        <img src="/static{{ MEDIA_URL }}{{ item.image }}" class="item-img" alt="FunkoImage">
+          <div class="item-card-body">
+             <h3 class="item-collection">{{ item.collection }}</h3>
+            <h3 class="item-title">{{ item.title }}</h3>
+            <h4 class="item-price">${{ item.price }}</h4>
+              <form method="POST">
+               {% csrf_token %}
+              <button type="submit" name="add_to_cart" value="{{ item.id }} ">ADD TO CART</button>
+              </form>
+              <h6>ITEMS LEFT: {{ item.stock }}</h6>
+              <p>{{ item.description }}</p>
+          </div>
+      </div>
 </div>
 
 {% endblock %}
