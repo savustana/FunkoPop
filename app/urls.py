@@ -52,6 +52,7 @@ urlpatterns = [
     path('user_profile/<int:user_id>', views.user_profile, name='user_profile'),
     path('view_profile/<int:user_id>', views.view_profile, name='view_profile'),
     path('data/', views.serialize_data, name='serialize_data'),
+    path('results/', views.SearchView.as_view(), name='search'),
 
     #endregion
 

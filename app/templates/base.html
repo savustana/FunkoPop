@@ -59,7 +59,7 @@
         {% endif %}
 
           <li>
-      <form class="search" role="search" name="search">
+      <form class="search" role="search" name="search" method="GET" action="{% url 'search' %}">
         <p><input class="search-bar" type="search" name="search" placeholder="Search" aria-label="Search"><button class="btn-search" type="submit">&#x1F50E;</button></p>
 
       </form>

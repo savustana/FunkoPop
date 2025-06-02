@@ -8,7 +8,8 @@
             <h1>Login</h1>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ login_form }}
+                <p>Username:</p> <p class="field">{{ login_form.username }}</p>
+                <p>Password:</p> <p class="field">{{ login_form.password }}</p>
                 <div class="form-button">
                 <button type="submit">Login</button>
                 </div>

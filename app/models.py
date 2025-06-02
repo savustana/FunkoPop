@@ -27,7 +27,7 @@ class Filter(models.Manager):
         return self.all().filter(price__gte=min_price, price__lte=max_price)
 
     def filter_search(self, search):
-        if self.filter(description__icontains=search) or self.filter(name__icontains=search) or self.filter(collection__contains=search):
+        if self.filter(name__icontains=search):
             return self.all().filter(name__icontains=search)
         return self.all()
 

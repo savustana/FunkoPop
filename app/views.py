@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
+from django.views.generic import ListView
+
 from .form import NewUserForm, StuffForm, CategoryForm, SeriesForm, ProfileUserForm
 from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse
@@ -30,9 +32,10 @@ def index(request):
     if request.method == "POST" and request.user:
         item_id = request.POST['add_to_cart']
         item = Stuff.objects.filter(pk=item_id).first()
-        stuff_order, created = StuffOrder.objects.get_or_create(item=item, defaults={'quantity': 1})
 
+        stuff_order, created = StuffOrder.objects.get_or_create(item=item, defaults={'quantity': 1})
         order, order_created = Order.objects.get_or_create(user=request.user)
+
         current_stuff = StuffOrder.objects.filter(id=stuff_order.id).first()
         order.items.add(current_stuff)
 
@@ -305,8 +308,14 @@ def view_cart(request):
 
             stuff_order = StuffOrder.objects.filter(item=item_id).first()
 
-            stuff_order.quantity -= 1
-            cart.total_price -= item.price
+            if stuff_order.quantity == 1:
+                order = StuffOrder.objects.filter(item=item_id).delete()
+                cart.total_price -= stuff_order.quantity * item.price
+                stuff_order.quantity = 0
+            else:
+                stuff_order.quantity -= 1
+                cart.total_price -= item.price
+
             stuff_order.save()
             cart.save()
 
@@ -422,4 +431,25 @@ def view_profile(request, user_id):
     base_context(request)
     context.update({'profile': profile, 'MEDIA_URL': settings.MEDIA_URL})
     return render(request, 'UserInfo/view_profile.html', context)
+
+
+class SearchView(ListView):
+    model = Stuff
+    template_name = 'Management/search.html'
+    context_object_name = 'all_search_results'
+
+    def get_queryset(self):
+        result = super(SearchView, self).get_queryset()
+        query = self.request.GET.get('search')
+        if query:
+            postresult = Stuff.objects.filter(title__contains=query)
+            if not postresult:
+                postresult = Stuff.objects.filter(description__icontains=query)
+                if not postresult:
+                    postresult = Stuff.objects.filter(collection__icontains=query)
+            result = postresult
+        else:
+            result = None
+        return result
+
 
