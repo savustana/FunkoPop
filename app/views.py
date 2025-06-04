@@ -412,7 +412,9 @@ def user_profile(request, user_id):
 
     if request.method == 'POST' and 'profile_submit' in request.POST:
         profile_id = request.POST.get('profile_submit')
+        print(profile_id)
         profile = ProfileUser.objects.filter(id=profile_id).first()
+
         image = request.FILES.get('profile_avatar')
         bio = request.POST.get('profile_bio')
         if image:
